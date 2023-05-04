@@ -1,0 +1,52 @@
+Si deseas leer el color de fondo desde un archivo `config.json` y utilizarlo para establecer el color de fondo de la barra de herramientas de Angular Material, aquí te muestro cómo puedes hacerlo.
+
+1. Crea un archivo `config.json` en la raíz de tu proyecto y agrega una propiedad `toolbarBackgroundColor` con el valor de color que deseas utilizar.
+
+   ```json
+   {
+     "toolbarBackgroundColor": "red"
+   }
+   ```
+
+2. En tu componente donde se utiliza la barra de herramientas (toolbar), agrega una dependencia a `HttpClient` para poder leer el archivo `config.json`. Puedes hacer esto en el constructor de tu componente.
+
+   ```typescript
+   import { Component, OnInit } from '@angular/core';
+   import { HttpClient } from '@angular/common/http';
+
+   @Component({
+     selector: 'app-my-component',
+     templateUrl: './my-component.component.html',
+     styleUrls: ['./my-component.component.scss']
+   })
+   export class MyComponent implements OnInit {
+     toolbarBackgroundColor: string;
+
+     constructor(private http: HttpClient) {}
+
+     ngOnInit(): void {
+       this.http.get('config.json').subscribe((config: any) => {
+         this.toolbarBackgroundColor = config.toolbarBackgroundColor;
+       });
+     }
+   }
+   ```
+
+   En este ejemplo, estamos leyendo el archivo `config.json` utilizando `HttpClient` y suscribiéndonos al resultado para obtener el valor de `toolbarBackgroundColor`.
+
+3. En el archivo `styles.scss`, utiliza la variable `toolbarBackgroundColor` que acabamos de leer desde el archivo `config.json` para establecer el color de fondo de la barra de herramientas de Angular Material.
+
+   ```scss
+   /* Importa las variables de tema de Angular Material */
+   @import '~@angular/material/theming';
+
+   /* Establece la paleta de colores para la barra de herramientas */
+   $my-app-toolbar-theme: mat-toolbar-theme($toolbar-background: $toolbarBackgroundColor);
+
+   /* Incluye los estilos de la barra de herramientas de Angular Material */
+   @include mat-toolbar-theme($my-app-toolbar-theme);
+   ```
+
+   En este ejemplo, estamos definiendo una variable `my-app-toolbar-theme` que establece la paleta de colores para la barra de herramientas de Angular Material. La propiedad `$toolbar-background` se establece en el valor de la variable `toolbarBackgroundColor` que acabamos de leer desde el archivo `config.json`.
+
+Con estos pasos, la barra de herramientas de Angular Material debería utilizar el color de fondo que se define en el archivo `config.json`. Espero que esto te ayude.
